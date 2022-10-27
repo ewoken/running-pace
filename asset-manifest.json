@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/running-pace/static/css/main.2fd272ed.css",
+    "main.js": "/running-pace/static/js/main.f7523a70.js",
+    "static/js/787.a73b19fb.chunk.js": "/running-pace/static/js/787.a73b19fb.chunk.js",
+    "index.html": "/running-pace/index.html",
+    "main.2fd272ed.css.map": "/running-pace/static/css/main.2fd272ed.css.map",
+    "main.f7523a70.js.map": "/running-pace/static/js/main.f7523a70.js.map",
+    "787.a73b19fb.chunk.js.map": "/running-pace/static/js/787.a73b19fb.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2fd272ed.css",
+    "static/js/main.f7523a70.js"
+  ]
+}
