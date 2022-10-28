@@ -4,7 +4,7 @@ import { interpolateRdYlGn } from "d3-scale-chromatic";
 import React from "react";
 
 const MIN_KM_DURATION_S = 3 * 60;
-const MAX_KM_DURATION_S = 7 * 60;
+const MAX_KM_DURATION_S = 8 * 60;
 const KM_DURATION_INCREMENT_S = 5;
 
 export function getSpeedFromKmDuration(duration: number) {
@@ -61,7 +61,7 @@ function PaceTable({ maxSpeed, setSelectedGoal }: P) {
         <tr>
           <th>T/km</th>
           <th>km/h</th>
-          <th className="bigRightBorder">% VMA</th>
+          <th className="bigRightBorder">% MAS</th>
           {distances.map(distance => {
             return <th>{distance.km} km</th>;
           })}
@@ -76,9 +76,9 @@ function PaceTable({ maxSpeed, setSelectedGoal }: P) {
 
           return (
             <tr className={isMinute ? "bottomBorder" : undefined}>
-              <td>{formatDuration(duration)}</td>
-              <td className={zone}>{speed.toFixed(2)}</td>
-              <td className={"bigRightBorder " + zone}>{(speedRatio * 100).toFixed(0)}</td>
+              <th>{formatDuration(duration)}</th>
+              <th className={zone}>{speed.toFixed(2)}</th>
+              <th className={"bigRightBorder " + zone}>{(speedRatio * 100).toFixed(0)}</th>
               {distances.map(distance => {
                 const color = interpolate(distance.maxSpeedInterval, speedRatio);
                 return (

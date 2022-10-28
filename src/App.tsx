@@ -18,11 +18,11 @@ function App() {
   const goalSpeed = selectedGoal !== null ? getSpeedFromKmDuration(selectedGoal.kmDuration) : null;
 
   return (
-    <>
-      <h1>Calculateur d'allure</h1>
+    <div>
+      <h1>Running pace</h1>
       <div className="Header">
         <div className="SpeedInput">
-          <div className="bold">VMA :</div>
+          <div className="bold">MAS:</div>
           <input
             type="number"
             min={0}
@@ -36,7 +36,7 @@ function App() {
         <div className="Goal">
           {selectedGoal && distanceItem && goalSpeed && (
             <>
-              <span className="bold">VMA pour l'objectif: </span>
+              <span className="bold">Goal MAS: </span>
               {/* <span>{selectedGoal.distance} km </span>
               <span>en {formatDuration(selectedGoal.distance * selectedGoal.kmDuration)}</span> */}
               <span className="red">
@@ -58,7 +58,7 @@ function App() {
         selectedGoal={selectedGoal}
         setSelectedGoal={setSelectedGoal}
       />
-    </>
+    </div>
   );
 }
 
