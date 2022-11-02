@@ -19,14 +19,16 @@
 
 .Header {
   display: flex;
-  position: sticky;
-  top: 0px;
+  /* position: sticky; */
+  /* top: 0px; */
   flex-wrap: wrap;
   gap: 10px;
   row-gap: 5px;
   padding: 10px 10px;
   background-color: white;
   z-index: 10;
+  /* height: 50px; */
+  align-items: center;
 }
 
 .SpeedInput {
@@ -51,6 +53,12 @@
 .PaceTable .ant-table.ant-table-small .ant-table-thead > tr > th,
 .PaceTable .ant-table.ant-table-small .ant-table-tbody > tr > td {
   padding: 1px 1px;
+}
+
+.PaceTable .ant-table.ant-table-small .ant-table-thead > tr > th {
+  font-weight: bold;
+  background-color: rgb(225, 225, 225);
+  border-bottom: 1px solid rgb(215, 215, 215);
 }
 
 .PaceTable .ant-table.ant-table-small .ant-table-tbody > tr > td {
@@ -104,5 +112,6 @@ tr:nth-child(2n + 1) td {
     bottom: 0px;
     width: 100%;
     transition: height 0.3s ease-in-out;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.6);
   }
 }

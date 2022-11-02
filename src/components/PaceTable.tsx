@@ -47,12 +47,12 @@ export interface Goal {
 }
 
 interface P {
-  maxSpeed: number;
+  maxAerobicSpeed: number;
   selectedGoal: Goal | null;
   setSelectedGoal: (value: Goal | null) => void;
 }
 
-function PaceTable({ maxSpeed, setSelectedGoal }: P) {
+function PaceTable({ maxAerobicSpeed, setSelectedGoal }: P) {
   const onMouseLeave = React.useCallback(() => {
     setSelectedGoal(null);
   }, [setSelectedGoal]);
@@ -60,18 +60,17 @@ function PaceTable({ maxSpeed, setSelectedGoal }: P) {
   const data = React.useMemo(() => {
     return kmDurations.map(duration => {
       const speed = getSpeedFromKmDuration(duration);
-      const speedRatio = speed / maxSpeed;
-      // const isMinute = duration % 60 === 0;
+      const speedRatio = speed / maxAerobicSpeed;
       const zone = getZone(speedRatio);
       return {
-        key: duration.toString() + maxSpeed.toString(),
+        key: duration.toString() + maxAerobicSpeed.toString(),
         kmDuration: duration,
         speed,
         speedRatio,
         zone,
       };
     });
-  }, [maxSpeed]);
+  }, [maxAerobicSpeed]);
 
   const columns = React.useMemo(() => {
     const _: ColumnsType<typeof data[number]> = [
@@ -168,9 +167,8 @@ function PaceTable({ maxSpeed, setSelectedGoal }: P) {
         dataSource={data}
         pagination={false}
         size={"small"}
-        scroll={{ y: "100%" }}
+        scroll={{ x: "100%", y: window.innerHeight > 800 ? 800 : undefined }}
         sticky
-        // sticky={{ offsetHeader: 48 }}
         onRow={row => {
           const isMinute = row.kmDuration % 60 === 0;
           return {

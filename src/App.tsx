@@ -3,15 +3,15 @@ import React from "react";
 import PaceTable, { getSpeedFromKmDuration, Goal } from "./components/PaceTable";
 import distances from "./distances";
 
-const initMaxSpeed = Number(window.localStorage.getItem("maxSpeed"));
+const initMaxAerobicSpeed = Number(window.localStorage.getItem("maxAerobicSpeed") ?? 8);
 
 function App() {
-  const [maxSpeed, setMaxSpeed] = React.useState(initMaxSpeed);
+  const [maxAerobicSpeed, setMaxAerobicSpeed] = React.useState(initMaxAerobicSpeed);
   const [selectedGoal, setSelectedGoal] = React.useState<Goal | null>(null);
 
   React.useEffect(() => {
-    window.localStorage.setItem("maxSpeed", maxSpeed.toString());
-  }, [maxSpeed, setMaxSpeed]);
+    window.localStorage.setItem("maxAerobicSpeed", maxAerobicSpeed.toString());
+  }, [maxAerobicSpeed, setMaxAerobicSpeed]);
 
   const distanceItem = React.useMemo(() => {
     return distances.find(d => d.km === selectedGoal?.distance);
@@ -23,16 +23,16 @@ function App() {
       <h1>Running pace</h1>
       <div className="Header">
         <div className="SpeedInput">
-          <div className="bold">MAS:</div>
+          <div className="bold">Max Aero Speed:</div>
           <InputNumber
             className="MAS_input"
             size="small"
             min={8}
             max={30}
             step={0.1}
-            value={maxSpeed}
+            value={maxAerobicSpeed}
             defaultValue={14}
-            onChange={value => value && setMaxSpeed(value)}
+            onChange={value => value && setMaxAerobicSpeed(value)}
             addonAfter="km/h"
           />
         </div>
@@ -57,7 +57,7 @@ function App() {
       </div>
 
       <PaceTable
-        maxSpeed={maxSpeed}
+        maxAerobicSpeed={maxAerobicSpeed}
         selectedGoal={selectedGoal}
         setSelectedGoal={setSelectedGoal}
       />
