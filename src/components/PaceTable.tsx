@@ -1,10 +1,12 @@
 import distances from "../distances";
 import formatDuration from "../formatDuration";
 import { interpolateRdYlGn } from "d3-scale-chromatic";
+import { Table } from "antd";
+import type { ColumnsType } from "antd/es/table";
 import React from "react";
 
 const MIN_KM_DURATION_S = 3 * 60;
-const MAX_KM_DURATION_S = 8 * 60;
+const MAX_KM_DURATION_S = 7 * 60;
 const KM_DURATION_INCREMENT_S = 5;
 
 export function getSpeedFromKmDuration(duration: number) {
@@ -55,50 +57,128 @@ function PaceTable({ maxSpeed, setSelectedGoal }: P) {
     setSelectedGoal(null);
   }, [setSelectedGoal]);
 
-  return (
-    <table className="PaceTable">
-      <thead>
-        <tr>
-          <th>T/km</th>
-          <th>km/h</th>
-          <th className="bigRightBorder">% MAS</th>
-          {distances.map(distance => {
-            return <th>{distance.km} km</th>;
-          })}
-        </tr>
-      </thead>
-      <tbody>
-        {kmDurations.map(duration => {
-          const speed = getSpeedFromKmDuration(duration);
-          const speedRatio = speed / maxSpeed;
-          const isMinute = duration % 60 === 0;
-          const zone = getZone(speedRatio);
+  const data = React.useMemo(() => {
+    return kmDurations.map(duration => {
+      const speed = getSpeedFromKmDuration(duration);
+      const speedRatio = speed / maxSpeed;
+      // const isMinute = duration % 60 === 0;
+      const zone = getZone(speedRatio);
+      return {
+        key: duration.toString() + maxSpeed.toString(),
+        kmDuration: duration,
+        speed,
+        speedRatio,
+        zone,
+      };
+    });
+  }, [maxSpeed]);
 
-          return (
-            <tr className={isMinute ? "bottomBorder" : undefined}>
-              <th>{formatDuration(duration)}</th>
-              <th className={zone}>{speed.toFixed(2)}</th>
-              <th className={"bigRightBorder " + zone}>{(speedRatio * 100).toFixed(0)}</th>
-              {distances.map(distance => {
-                const color = interpolate(distance.maxSpeedInterval, speedRatio);
-                return (
-                  <td
-                    className="hoverable"
-                    style={{ backgroundColor: color }}
-                    onMouseEnter={() => {
-                      setSelectedGoal({ distance: distance.km, kmDuration: duration });
-                    }}
-                    onMouseLeave={onMouseLeave}
-                  >
-                    {formatDuration(distance.km * duration)}
-                  </td>
-                );
-              })}
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+  const columns = React.useMemo(() => {
+    const _: ColumnsType<typeof data[number]> = [
+      {
+        key: "kmDuration",
+        title: "T/km",
+        dataIndex: "kmDuration",
+        fixed: "left",
+        width: 50,
+        align: "center",
+        className: "kmDuration",
+        render(_, row) {
+          return formatDuration(row.kmDuration);
+        },
+        onCell(row) {
+          return {
+            className: row.zone,
+          };
+        },
+      },
+      {
+        key: "speed",
+        title: "km/h",
+        fixed: "left",
+        width: 35,
+        align: "center",
+        render(_, row) {
+          return row.speed.toFixed(1);
+        },
+        onCell(row) {
+          return {
+            className: row.zone,
+          };
+        },
+      },
+      {
+        key: "speedRatio",
+        title: "%",
+        fixed: "left",
+        width: 35,
+        align: "center",
+        render(_, row) {
+          return (row.speedRatio * 100).toFixed(0);
+        },
+        onCell(row) {
+          return {
+            className: row.zone,
+            style: {
+              borderRight: "2px solid black", // #f0f0f0",
+            },
+          };
+        },
+        onHeaderCell() {
+          return {
+            style: {
+              borderRight: "2px solid black", // #fafafa",
+            },
+          };
+        },
+      },
+      ...distances.map(distance => {
+        const column: ColumnsType<typeof data[number]>[number] = {
+          key: distance.km.toString(),
+          title: `${distance.km} km`,
+          width: 60,
+          align: "center" as const,
+          render(_, row) {
+            return formatDuration(distance.km * row.kmDuration);
+          },
+          onCell(row) {
+            const color = interpolate(distance.maxSpeedInterval, row.speedRatio);
+            return {
+              className: "hoverable",
+              style: {
+                backgroundColor: color,
+              },
+              onMouseEnter: () => {
+                setSelectedGoal({ distance: distance.km, kmDuration: row.kmDuration });
+              },
+              onMouseLeave,
+            };
+          },
+        };
+        return column;
+      }),
+    ];
+    return _;
+  }, [onMouseLeave, setSelectedGoal]);
+
+  return (
+    <div className="PaceTable">
+      <Table
+        columns={columns}
+        dataSource={data}
+        pagination={false}
+        size={"small"}
+        scroll={{ y: "100%" }}
+        sticky
+        // sticky={{ offsetHeader: 48 }}
+        onRow={row => {
+          const isMinute = row.kmDuration % 60 === 0;
+          return {
+            className: isMinute ? "isMinute" : undefined,
+          };
+        }}
+      />
+    </div>
   );
 }
 

@@ -1,3 +1,4 @@
+import { InputNumber } from "antd";
 import React from "react";
 import PaceTable, { getSpeedFromKmDuration, Goal } from "./components/PaceTable";
 import distances from "./distances";
@@ -18,20 +19,22 @@ function App() {
   const goalSpeed = selectedGoal !== null ? getSpeedFromKmDuration(selectedGoal.kmDuration) : null;
 
   return (
-    <div>
+    <div className="App">
       <h1>Running pace</h1>
       <div className="Header">
         <div className="SpeedInput">
           <div className="bold">MAS:</div>
-          <input
-            type="number"
-            min={0}
+          <InputNumber
+            className="MAS_input"
+            size="small"
+            min={8}
             max={30}
             step={0.1}
             value={maxSpeed}
-            onChange={e => setMaxSpeed(Number(e.target.value))}
+            defaultValue={14}
+            onChange={value => value && setMaxSpeed(value)}
+            addonAfter="km/h"
           />
-          <div>km/h</div>
         </div>
         <div className="Goal">
           {selectedGoal && distanceItem && goalSpeed && (
